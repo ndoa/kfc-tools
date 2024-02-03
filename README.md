@@ -1,12 +1,14 @@
 # kfc-tools
 [![CI](https://github.com/ndoa/kfc-tools/workflows/CI/badge.svg)](https://github.com/ndoa/kfc-tools/actions)
 
+![Enshrouded Modding Discord Banner](https://discordapp.com/api/guilds/1203473669343412234/widget.png?style=banner4)
+
 ## Usage:
 
 Run the extractor with the following arguments:
 
 ```bash
-kfc_extractor {path to enshrouded.kfc_dir} {path to enshrouded.kfc_data}
+kfc-tools.exe {path to enshrouded.kfc_dir} {path to enshrouded.kfc_data}
 ```
 
 
