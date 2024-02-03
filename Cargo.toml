@@ -1,5 +1,5 @@
 [package]
-name = "kfc-extractor"
+name = "kfc-tools"
 version = "0.1.0"
 edition = "2021"
 
