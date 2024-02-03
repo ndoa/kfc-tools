@@ -66,9 +66,9 @@ pub fn read_kfc_dir<T>(rdr: &mut T) -> Result<KFCDir>
 where
     T: Read + ReadBytesExt + std::io::Seek,
 {
-    let _offset = rdr.stream_position()? as u64;
+    let _offset = rdr.stream_position()?;
     let header = read_kfc_dir_header(rdr)?;
-    let _data_start = rdr.stream_position()? as u64;
+    let _data_start = rdr.stream_position()?;
 
     // I've never seen a case where these are different, but the offset table
     // explicitly uses `.count2` instead of `.count`.

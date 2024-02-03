@@ -66,5 +66,5 @@ fn main() -> Result<()> {
         out_file.write_all(&file_data)?;
     }
 
-    return Ok(());
+    Ok(())
 }
