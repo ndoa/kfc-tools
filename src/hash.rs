@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-const KEEN_HASH_TABLE: &'static [u64] = &[
+const KEEN_HASH_TABLE: &[u64] = &[
     0x0000000000000000, 0xb32e4cbe03a75f6f, 0xf4843657a840a05b, 0x47aa7ae9abe7ff34, 
     0x7bd0c384ff8f5e33, 0xc8fe8f3afc28015c, 0x8f54f5d357cffe68, 0x3c7ab96d5468a107, 
     0xf7a18709ff1ebc66, 0x448fcbb7fcb9e309, 0x0325b15e575e1c3d, 0xb00bfde054f94352, 
@@ -66,12 +66,14 @@ const KEEN_HASH_TABLE: &'static [u64] = &[
     0xa707db9acf80c06d, 0x14299724cc279f02, 0x5383edcd67c06036, 0xe0ada17364673f59, 
 ];
 
+/// Generates a KFC file hash for the given string.
+#[allow(dead_code)]
 pub fn hash_filename_string(input: &str) -> u64 {
     let input_bytes = input.as_bytes();
     let mut output: u64 = 0xFFFFFFFFFFFFFFFF;
-    for i in 0..input.len() {
-        let c = input_bytes[i];
-        let table_index = (output ^ c as u64) & 0xFF;
+
+    for c in input_bytes {
+        let table_index = (output ^ *c as u64) & 0xFF;
         output = KEEN_HASH_TABLE[table_index as usize] ^ (output >> 8);
     }
     !output
