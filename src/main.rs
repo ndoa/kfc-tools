@@ -4,6 +4,7 @@ use std::{
     fs::{self, File},
     io::{BufReader, Read, Seek, SeekFrom, Write},
 };
+mod hash;
 mod kfc;
 use kfc::read_kfc_dir;
 
