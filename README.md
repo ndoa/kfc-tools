@@ -9,7 +9,7 @@ Tools for working with the kfc_data/kfc_dir files for Enshrouded modding.
 Run the extractor with the following arguments:
 
 ```bash
-kfc-tools.exe {path to enshrouded.kfc_dir} {path to enshrouded.kfc_data}
+kfc-tools.exe extract-kfc {path to enshrouded.kfc_dir} {path to enshrouded.kfc_data}
 ```
 
 Output notes:
