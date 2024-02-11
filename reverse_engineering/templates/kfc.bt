@@ -1,0 +1,54 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: Enshrouded archive file (Keen File Container)
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: *.kfc_dir
+//  ID Bytes: 4B 46 43 30
+//   History: 
+//------------------------------------------------
+
+
+struct {
+    uint32 magic;
+    uint32 count;
+    uint32 count2;
+    uint32 field_C;
+    uint64 data_file_size;
+} header;
+
+local uint32 data_start = FTell();
+
+local uint32 section_0_start = data_start;
+local uint32 section_0_count = header.count;
+
+local uint32 section_1_start = data_start + 8*header.count;
+local uint32 section_1_count = header.count;
+
+local uint32 section_2_start = data_start + 24*header.count;
+local uint32 section_2_count = header.count2;
+
+
+FSeek(section_0_start);
+struct {
+    uint64 hash[section_0_count];
+} section_0_file_name_hash_table;
+
+
+FSeek(section_1_start);
+struct {
+    struct {
+       uint32 size_0;
+       uint32 size_1;
+       uint32 entry_index;
+       uint32 d;
+    } entry[section_1_count];
+} section_1_file_size_name;
+
+FSeek(section_2_start);
+struct {
+    uint64 offset[section_2_count];
+} section_2_file_data_offset_table;

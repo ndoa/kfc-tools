@@ -1,0 +1,182 @@
+struct {
+    uint32 magic;
+
+    local uint32 unk_table0_offset_base = FTell();
+    uint32 unk_table0_offset;
+    uint32 unk_table0_size;
+
+    // uint32 field_C;
+    // uint32 field_10;
+    local uint32 unk_table1_offset_base = FTell();
+    uint32 unk_table1_offset;
+    uint32 unk_table1_size;
+
+    // uint32 field_14;
+    // uint32 field_18;
+    local uint32 unk_table2_offset_base = FTell();
+    uint32 unk_table2_offset;
+    uint32 unk_table2_size;
+
+    // uint32 field_1C;
+    // uint32 field_20;
+    local uint32 unk_table3_offset_base = FTell();
+    uint32 unk_table3_offset;
+    uint32 unk_table3_size;
+
+    // uint32 field_24;
+    // uint32 field_28;
+    local uint32 unk_table4_offset_base = FTell();
+    uint32 unk_table4_offset;
+    uint32 unk_table4_size;
+
+    // uint32 field_2C;
+    // uint32 field_30;
+    local uint32 unk_table5_offset_base = FTell();
+    uint32 unk_table5_offset;
+    uint32 unk_table5_size;
+
+    // uint32 field_34;
+    // uint32 field_38;
+    local uint32 unk_table6_offset_base = FTell();
+    uint32 unk_table6_offset;
+    uint32 unk_table6_size;
+
+    local uint32 string_table_offset_base = FTell();
+    uint32 string_table_offset;
+    uint32 string_table_size; // 1 byte per entry
+
+    // uint32 field_44;
+    // uint32 field_48;
+    local uint32 unk_table8_offset_base = FTell();
+    uint32 unk_table8_offset;
+    uint32 unk_table8_size; // 8 bytes per entry
+
+    // uint32 field_4C;
+    // uint32 field_50;
+    local uint32 unk_table9_offset_base = FTell();
+    uint32 unk_table9_offset;
+    uint32 unk_table9_size;
+
+    // uint32 field_54;
+    // uint32 field_58;
+    local uint32 unk_table10_offset_base = FTell();
+    uint32 unk_table10_offset;
+    uint32 unk_table10_size;
+
+    // uint32 field_5C;
+    // uint32 field_60;
+    local uint32 unk_table11_offset_base = FTell();
+    uint32 unk_table11_offset;
+    uint32 unk_table11_size;
+
+    // uint32 field_64;
+    // uint32 field_68;
+    local uint32 unk_table12_offset_base = FTell();
+    uint32 unk_table12_offset;
+    uint32 unk_table12_size;
+
+    // uint32 field_6C;
+    // uint32 field_70;
+    local uint32 unk_table13_offset_base = FTell();
+    uint32 unk_table13_offset;
+    uint32 unk_table13_size;
+
+
+    local uint32 unk_table0_address = unk_table0_offset_base + unk_table0_offset;
+    local uint32 unk_table1_address = unk_table1_offset_base + unk_table1_offset;
+    local uint32 unk_table2_address = unk_table2_offset_base + unk_table2_offset;
+    local uint32 unk_table3_address = unk_table3_offset_base + unk_table3_offset;
+    local uint32 unk_table4_address = unk_table4_offset_base + unk_table4_offset;
+    local uint32 unk_table5_address = unk_table5_offset_base + unk_table5_offset;
+    local uint32 unk_table6_address = unk_table6_offset_base + unk_table6_offset;
+    local uint32 string_table_address = string_table_offset_base + string_table_offset; // table 7
+    local uint32 unk_table8_address = unk_table8_offset_base + unk_table8_offset;
+    local uint32 unk_table9_address = unk_table9_offset_base + unk_table9_offset;
+    local uint32 unk_table10_address = unk_table10_offset_base + unk_table10_offset;
+    local uint32 unk_table11_address = unk_table11_offset_base + unk_table11_offset;
+    local uint32 unk_table12_address = unk_table12_offset_base + unk_table12_offset;
+    local uint32 unk_table13_address = unk_table13_offset_base + unk_table13_offset;
+} header;
+
+local uint32 data_start = FTell();
+
+FSeek(header.unk_table0_address);
+struct {
+    byte data[header.unk_table0_size];
+} unk_table0;
+
+FSeek(header.unk_table1_address);
+struct {
+    byte data[header.unk_table1_size];
+} unk_table1;
+
+FSeek(header.unk_table2_address);
+struct {
+    byte data[header.unk_table2_size];
+} unk_table2;
+
+FSeek(header.unk_table3_address);
+struct {
+    byte data[header.unk_table3_size];
+} unk_table3;
+
+FSeek(header.unk_table4_address);
+struct {
+    byte data[header.unk_table4_size];
+} unk_table4;
+
+FSeek(header.unk_table5_address);
+struct {
+    byte data[header.unk_table5_size];
+} unk_table5;
+
+FSeek(header.unk_table6_address);
+struct {
+    byte data[header.unk_table6_size];
+} unk_table6;
+
+FSeek(header.string_table_address);
+struct {
+    while(FTell() < header.string_table_address + header.string_table_size) {
+        struct {
+            uint16 str_size;
+            char str_data[str_size];
+            if (FTell() % 2 != 0) {
+                byte _padding[FTell() % 2];
+            }
+        } SizePrefixedAlignedString;
+    }    
+} string_table;
+
+FSeek(header.unk_table8_address);
+struct {
+    struct {
+        uint32 unk0;
+        uint32 unk1;
+    } entries[header.unk_table8_size];
+} unk_table8;
+
+FSeek(header.unk_table9_address);
+struct {
+    byte data[header.unk_table9_size];
+} unk_table9;
+
+FSeek(header.unk_table10_address);
+struct {
+    byte data[header.unk_table10_size];
+} unk_table10;
+
+FSeek(header.unk_table11_address);
+struct {
+    byte data[header.unk_table11_size];
+} unk_table11;
+
+FSeek(header.unk_table12_address);
+struct {
+    byte data[header.unk_table12_size];
+} unk_table12;
+
+FSeek(header.unk_table13_address);
+struct {
+    byte data[header.unk_table13_size];
+} unk_table13;

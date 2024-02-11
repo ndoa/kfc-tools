@@ -1,0 +1,129 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: Enshrouded CRPF (resource package file)
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: "CRPF"
+//  ID Bytes: 43 52 50 46
+//   History: 
+//------------------------------------------------
+
+#include "common.bt"
+#include "kbf0.bt"
+
+struct {
+    uint32 magic;
+    uint32 version;
+    uint32 field_8;
+    uint32 field_C;
+    
+    local uint32 resource_metadata_table_base_offset = FTell();
+    uint32 resource_metadata_table_offset;
+    uint32 resource_metadata_table_count;
+    local uint32 resource_metadata_table_address = resource_metadata_table_base_offset + resource_metadata_table_offset;
+    
+    local uint32 unk_0_table_base_offset = FTell();
+    uint32 unk_0_table_offset;
+    uint32 unk_0_table_count;
+    local uint32 unk_0_table_address = unk_0_table_base_offset + unk_0_table_offset;
+    
+    local uint32 unk_1_table_base_offset = FTell();
+    uint32 unk_1_table_offset;
+    uint32 unk_1_table_count;
+    local uint32 unk_1_table_address = unk_1_table_base_offset + unk_1_table_offset;
+
+    local uint32 resource_data_base_offset = FTell();
+    uint32 resource_data_offset;
+    uint32 resource_data_size;
+    local uint32 resource_data_address = resource_data_base_offset + resource_data_offset;
+
+    local uint32 unk_3_table_base_offset = FTell();
+    uint32 unk_3_table_offset;
+    uint32 unk_3_table_count;
+    local uint32 unk_3_table_address = unk_3_table_base_offset + unk_3_table_offset;
+
+    local uint32 resource_name_base_offset = FTell();
+    uint32 resource_name_offset;
+    uint32 resource_name_size;
+    local uint32 resource_name_address = resource_name_base_offset + resource_name_offset;
+} header;
+
+
+
+typedef struct {
+    byte guid[16];
+    uint32 type_hash1; // "hash1" from the in-memory reflection data.
+    byte version[4];
+    byte unk[8];
+} ResourceReferenceGUID;
+
+
+FSeek(header.resource_metadata_table_address);
+struct {
+    struct {
+        ResourceReferenceGUID ref_guid;
+        uint32 type_hash2; // "hash2" from the in-memory reflection data.
+
+        // These flags determines whether use the reflection data from the file,
+        // or from the compiled-time reflection data in the executable binary.
+        uint32 flags; 
+    
+        local uint32 resource_data_base_offset = FTell();
+        uint32 resource_data_offset;
+        uint32 resource_data_size;
+        local uint32 resource_data_address = resource_data_base_offset + resource_data_offset;
+        
+        uint32 field_30;
+        uint32 main_header_unk0_table_entries;
+        uint32 field_3C;
+    } resource_metadata[header.resource_metadata_table_count] <optimize=false>;
+} resource_metadata_table;
+
+// Unknown table of "reference" GUIDs
+FSeek(header.unk_0_table_address);
+struct {
+    ResourceReferenceGUID guids[header.unk_0_table_count];
+} unk_0_table;
+
+// Another unknown table of 16-byte guides
+FSeek(header.unk_1_table_address);
+struct {
+    struct {
+        byte guid[16];
+    } data[header.unk_1_table_count];
+} unk_1_table;
+
+FSeek(header.resource_data_address);
+struct {
+    // Parse the KBF0 object
+    local uint32 resource_data_magic = PeekUint32();
+    if (resource_data_magic == 0x3046424B /*"KBF0"*/ )
+    {
+        KBF0_object kbf0_data;
+    }
+
+    /*
+    // Read it again as a byte array just for debugging.
+    FSeek(header.resource_data_address);
+    struct {
+        byte unk[1];
+    } data[header.resource_data_size];
+    */
+} resource_data;
+
+FSeek(header.unk_3_table_address);
+struct {
+    struct {
+        uint32 unk0;
+
+        // Exact same as header.resource_name_size,
+        // Unclear why this is duplicated from the header.
+        uint32 resource_name_size; // 
+    } data[header.unk_3_table_count];
+} unk_3_table;
+
+FSeek(header.resource_name_address);
+char resource_name[header.resource_name_size];

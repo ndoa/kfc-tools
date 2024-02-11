@@ -1,0 +1,40 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: Common BT utils for KFC templates
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+#ifndef KFC_COMMON
+#define KFC_COMMON
+
+
+byte PeekByte() {
+    local uint64 address = FTell();
+    byte _peek_data <hidden=true>;
+    FSeek(address);
+    return _peek_data;
+}
+
+uint32 PeekUint32() {
+    local uint64 address = FTell();
+    uint32 _peek_data <hidden=true>;
+    FSeek(address);
+    return _peek_data;
+}
+
+void pad_align(int alignment) {
+    local uint32 off_align = FTell() % alignment;
+    if (off_align != 0) {
+        local uint32 padding_needed = alignment - off_align;
+        byte _alignment_pad[padding_needed] <hidden=true>;
+    } 
+}
+
+#endif

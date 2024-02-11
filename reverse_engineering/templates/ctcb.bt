@@ -1,0 +1,165 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: CTCB parser
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 43 54 43 42
+//   History: 
+//------------------------------------------------
+
+#include "common.bt"
+
+enum PrimativeTypeId {
+    None = 0,
+    Bool = 1,
+    Sint8 = 2,
+    Sint16 = 3,
+    Sint32 = 4,
+    Sint64 = 5,
+    Uint8 = 6,
+    Uint16 = 7,
+    Uint32 = 8,
+    Uint64 = 9,
+    Float32 = 10,
+    Float64 = 11,
+    Enum = 12,
+    Bitmask = 13,
+    String = 14,
+    Guid = 15,
+    ResourceId = 16,
+    ContentHash = 17,
+    Optional = 18,
+    Variant = 19,
+    Struct = 20,
+    Array = 21,
+};
+
+string ReadStringTableString(uint64 string_table_address, uint32 stoff)
+{    
+    local uint64 address = FTell();
+    FSeek(string_table_address + stoff-1);
+    struct {
+        byte str_length <hidden=true>;
+        char data[str_length+1] <hidden=true>;
+    } s <optimize=false, hidden=true>;
+    FSeek(address);
+    return Str("%s", s.data);
+}
+
+struct CTCB_object {
+    local uint32 base_offset = FTell();
+    
+    struct {
+        uint32 magic;
+        uint32 data_size;
+
+        local uint32 unk_0_table_base_offset = FTell();
+        uint32 unk_0_table_offset; // UNCERTAIN!
+        uint32 unk_0_table_count;
+        local uint32 unk_0_table_address = unk_0_table_base_offset + unk_0_table_offset;
+    
+        local uint32 type_table_base_offset = FTell();
+        uint32 type_table_offset;
+        uint32 type_table_count;
+        local uint32 type_table_address = type_table_base_offset + type_table_offset;
+    
+        local uint32 type_string_table_base_offset = FTell();
+        uint32 type_string_table_offset;
+        uint32 type_string_table_count;
+        local uint32 type_string_table_address = type_string_table_base_offset + type_string_table_offset;
+
+        local uint32 unk_2_table_base_offset = FTell();
+        uint32 unk_2_table_offset;
+        uint32 unk_2_table_count;    
+        local uint32 unk_2_table_address = unk_2_table_base_offset + unk_2_table_offset;
+
+        local uint32 unk_3_table_base_offset = FTell();
+        uint32 unk_3_table_offset;
+        uint32 unk_3_table_count;    
+        local uint32 unk_3_table_address = unk_3_table_base_offset + unk_3_table_offset;
+
+        uint32 unk_field;
+    } CTCB_header;
+
+    // CTCB unk_0 table
+    FSeek(CTCB_header.unk_0_table_address);
+    struct {
+        struct {
+            uint32 unk;
+        } data[CTCB_header.unk_0_table_count] <optimize=false>;
+    } unk_0_table;    
+
+    // CTCB type table
+    FSeek(CTCB_header.type_table_address);
+    struct {
+        struct {
+            //byte unk[32];
+            uint16 str_table_offset_type_name;
+            local string str_table_type_name = ReadStringTableString(CTCB_header.type_string_table_address, str_table_offset_type_name);
+
+            uint16 str_table_offset_type_name_2;
+            local string str_table_type_name_2 = ReadStringTableString(CTCB_header.type_string_table_address, str_table_offset_type_name_2);
+
+            uint16 field_4;
+            uint16 field_6;
+            uint32 field_8;
+            uint32 field_C;
+            byte some_command_or_type;
+            byte field_11;
+            byte field_12;
+            byte field_13;
+            uint32 type_id;
+            uint32 field_18;
+            uint32 field_1C;
+        } data[CTCB_header.type_table_count] <optimize=false>;
+    } ctcb_type_table;
+    
+
+    // CTCB type_string table
+    FSeek(CTCB_header.type_string_table_address);
+
+    struct {
+        if (CTCB_header.type_string_table_count > 0) {
+            while(FTell() < CTCB_header.type_string_table_address + CTCB_header.type_string_table_count) {
+                struct {
+                    byte str_size;
+                    char str_data[str_size+1];
+                } BytePrefixedString;
+            }    
+        }
+    } ctcb_type_string_table;
+
+    // CTCB unk_2 table
+    FSeek(CTCB_header.unk_2_table_address);
+    struct {
+        struct {
+            uint16 str_table_offset_var_name;
+            local string str_table_var_name = ReadStringTableString(CTCB_header.type_string_table_address, str_table_offset_var_name);
+            uint16 field_2;
+            uint16 field_4;
+            uint16 field_6;
+        } data[CTCB_header.unk_2_table_count] <optimize=false>;
+    } unk_2_table;
+
+    // CTCB unk_3 table
+    FSeek(CTCB_header.unk_3_table_address);
+    struct {
+        struct {
+            /*
+            uint16 str_table_offset_var_name;
+            uint16 field_2;
+            uint16 field_4;
+            uint16 field_6;
+            uint16 field_8;
+            uint16 field_A;
+            */
+            byte data[8];
+        } data[CTCB_header.unk_3_table_count];
+    } unk_3_table;
+};
+
+//CTCB_object data;

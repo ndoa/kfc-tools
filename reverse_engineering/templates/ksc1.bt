@@ -1,0 +1,71 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: Enshrouded save container (KSC1/"characters")
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: characters
+//  ID Bytes: 4B 53 43 31
+//   History: 
+//------------------------------------------------
+
+
+struct {
+    uint32 magic;
+    uint32 section_count;
+    uint64 header_crc; // Hash of "section_table" array bytes.
+    uint64 field_10;
+} header;
+
+struct {
+    uint32 field_0;
+    byte name[4];
+    uint32 size;
+} section_table[header.section_count];
+
+
+struct {
+    local int i = 0;
+    for (i=0; i < header.count; i++) {
+        struct {
+            byte section_data[header.entries[i].size];
+        } section;
+    }
+} entry_data;
+
+/*
+local uint32 data_start = FTell();
+
+local uint32 section_0_start = data_start;
+local uint32 section_0_count = header.count;
+
+local uint32 section_1_start = data_start + 8*header.count;
+local uint32 section_1_count = header.count;
+
+local uint32 section_2_start = data_start + 24*header.count;
+local uint32 section_2_count = header.count2;
+
+
+FSeek(section_0_start);
+struct {
+    uint64 hash[section_0_count];
+} section_0_file_name_hash_table;
+
+
+FSeek(section_1_start);
+struct {
+    struct {
+       uint32 a;
+       uint32 b;
+       uint32 entry_index;
+       uint32 d;
+    } entry[section_1_count];
+} section_1_file_size_name;
+
+FSeek(section_2_start);
+struct {
+    uint64 offset[section_2_count];
+} section_2_file_data_offset_table;
+*/

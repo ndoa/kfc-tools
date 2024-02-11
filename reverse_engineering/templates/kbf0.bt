@@ -1,0 +1,55 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.2 Binary Template
+//
+//      File: KFB0 parser
+//   Authors: github.com/ndoa
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 4B 42 46 30
+//   History: 
+//------------------------------------------------
+
+#include "common.bt"
+#include "ctcb.bt"
+
+struct KBF0_object {
+    local uint32 base_offset = FTell();
+    
+    struct {
+        uint32 magic;
+        uint32 data_size;
+        uint32 type_hash1; // "hash1" from the in-memory reflection data.
+        uint32 type_hash2; // "hash2" from the in-memory reflection data.
+        
+        uint32 section1_size;
+        uint32 ctcb_section_size;
+
+        uint32 field_18;
+        uint32 field_1C;
+        uint32 field_20;
+        uint32 field_24;
+    } header;
+
+    // Unclear if this is correct, the real parser _always_ adds +8 though.
+    byte unk[8];
+
+    struct {
+        byte data[header.section1_size];
+    } section1;
+    
+    // Code explicitly aligns this CTCB section to 8 bytes.
+    pad_align(8);
+    struct {
+        if (PeekUint32() == 0x42435443) // CTCB
+        {
+            CTCB_object ctcb;
+        }
+        else
+        {
+            byte data[header.ctcb_section_size];
+        }
+    } ctcb_section;
+
+};
