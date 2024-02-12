@@ -90,5 +90,6 @@ mod tests {
             hash_filename_string("fog_of_war.fs.spv"),
             0x2e5fafe3c5db1588
         );
+        assert_eq!(hash_filename_string("98f7e9b8b1233ca76c1bbb3500013400"), 0x2e4fdb9b88404f3e);
     }
 }
